@@ -50,19 +50,16 @@ p3-2-governance-research/
 ├── README.md                              (this file)
 ├── RESEARCH_QUESTIONS.md                  (detailed breakdown of A/B/C)
 ├── CRITIQUE.md                            (critical assessment of the proposal)
-├── ARCHITECTURE.md                        (architectural overview)
-├── /docs/
-│   ├── white-paper-v1.md                  (full technical proposal)
-│   ├── relational-schema.md               (database design with caveats)
-│   ├── interpretation-layer-design.md     (the missing piece)
-│   └── asymmetric-authority-safety.md     (why tighten-only matters)
-├── /experiments/
-│   ├── adversarial-testbed.md             (how to validate against gaming)
-│   └── validation-framework.md            (how to prove tightening works)
-└── /implementation/
-    ├── technology-choices.md              (PostgreSQL, TimescaleDB, ClickHouse, Kafka, Flink)
-    └── materialization-correctness.md     (fixes to pseudocode issues)
+├── ARCHITECTURE.md                        (architectural overview and known gaps)
+├── COMMENTARY.md                          (synthesis commentary)
+├── PUSH_TO_GITHUB.md                      (setup notes for publishing this repo)
+└── docs/
+    └── white-paper-v1.md                  (full technical proposal; sec. 3 flywheel, sec. 4 red-team, sec. 5 policy layer)
 ```
+
+The prototype that tests the asymmetric-authority rule lives in a separate repository,
+`wking53214/experimental`. Its `docs/THEORY_ALIGNMENT.md` maps each claim here to what the
+code implements, partially implements, or leaves out.
 
 ---
 
@@ -74,12 +71,12 @@ p3-2-governance-research/
 
 **Then:**
 3. ARCHITECTURE.md (what the system actually does)
-4. docs/asymmetric-authority-safety.md (the strongest piece)
-5. docs/interpretation-layer-design.md (what's missing)
+4. docs/white-paper-v1.md, sec. 5 "Policy Layer" (the asymmetric-authority rules and approval gates)
+5. docs/white-paper-v1.md, sec. 4 "Red-Team Analysis" (failure modes and mitigations)
 
 **If diving deeper:**
 6. docs/white-paper-v1.md (full proposal)
-7. experiments/adversarial-testbed.md (how to invalidate it)
+7. The `experimental` repository's `docs/LIMITATIONS.md` and `docs/THEORY_ALIGNMENT.md` (what the prototype does and does not do)
 
 ---
 
