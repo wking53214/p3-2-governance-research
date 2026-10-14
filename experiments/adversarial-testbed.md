@@ -33,6 +33,7 @@ Can an adversarial workload exploit the enforcement-feedback loop to cause incor
 | Inflate from the start: poison the baseline | Trace agent `inflate-from-start` | Tightened normally (there is no drift to hold on) |
 | Rewrite the audit log with every hash recomputed | `tests/test_audit_anchor.py` | Refused at startup against an anchor the process cannot rewrite; accepted if the attacker can also rewrite the anchor |
 | A buggy signal source spends the budget | `tests/test_signal_interface.py` | Bounded at the breaker; the source cannot raise a limit or decide anything |
+| Game the validation canary: complete the known canary tasks, hang the rest | Roster `canary_v1`, 20 seeds, round 8 | Predictable selection: DEGRADED on 140 of 140 reviews, restore request 20 of 20 seeds, tightening held. Keyed selection: 1 of 20, saving equal to an honest runaway's |
 
 ## What validation adds against gaming
 
@@ -42,5 +43,5 @@ The validation layer judges a tightening by a canary A/B comparison in time curr
 
 - Coordinated attackers spreading violations across agents or boundaries so no single pattern forms.
 - The decoy attack from the critique (draw tightening to cheap boundary A, then attack B): per-agent, per-limit boundaries and per-boundary breakers mean A's tightening does not spend B's budget, so the attack as described does not apply, but a variant across many throwaway agent ids has not been tried (the agent cap of 1,000 is the only guard).
-- Attacks on the canary itself (an agent that behaves on every tenth task).
+- ~~Attacks on the canary itself (an agent that behaves on every tenth task).~~ Tested in round 8: with a predictable canary the attacker is gamed on every review and a restore request is filed on every seed; with a keyed selection the same attacker is treated like an honest runaway. Condition: the key is secret from the agent and the kernel does not reveal a task's deadline. Still untested: per-task probing of membership by observing when a task is killed.
 - Anything against real traffic.
