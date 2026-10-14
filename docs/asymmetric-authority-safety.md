@@ -53,7 +53,9 @@ Head to head with a two-way adaptive limiter (AIMD) on the same traces and seeds
 | The one-way rule | An attacker who can wait out the limiter's recovery keeps its budget under a two-way limiter and loses it under the ratchet. It matters exactly when `(period - 1) x increase >= 0.10`, which predicted 10 of 10 cells of a sweep | round 9, 10b |
 | The human gate | Not measurable in a replay; it is what turns the cap's "stop" into "stop until someone looks", and it is the price of the direction | |
 
-A two-way limiter with the cap and the drift hold matches the ratchet on every honest agent to within a point. So the direction is not the source of safety; bounding automation and interpreting the signal are. The direction's contribution is narrow, real, and stated as a formula.
+A two-way limiter with the cap and the drift hold matches the ratchet on every honest agent to within a point, and does so with **no human decisions at all** (the ratchet asked for 216 over 500 agent-seeds, about one per twenty thousand tasks; round 11d). So the direction is not the source of safety; bounding automation and interpreting the signal are. The direction's contribution is narrow, real, and stated as a formula, and the human gate is its price, in decisions.
+
+Limits found in round 11: under a heavy-tailed (Pareto) duration distribution the two-way limiter never sees a calm slice and so never recovers, which makes the direction moot there, and the drift hold weakens because the completed-duration median tracks a slowdown poorly (an honest 3x regression costs 5.8 points even under the ratchet). Under a bimodal shape every statement holds. The breaker cap is a dial: each automatic step buys about 9 points of saving on sustained attackers for about 0.7 points of pooled honest cost (5 points on an agent slow from its first task).
 
 ## The honest statement
 
