@@ -41,6 +41,20 @@ Tested by: a fuzzing attacker that only observes (never raised a limit), 36 of 3
 2. **Constraint accumulation.** Limits only go down on their own, so someone has to review and restore them. The trap-loop validation layer files restore requests when a tightening is confirmed harmful; everything else waits for a periodic review. This is a feature, and it is not "no human oversight".
 3. **The benefit is bounded by the same cap.** On a runaway task the loop saves at most the breaker's arithmetic, 27% of the time those tasks burn (23% with the validation canary). A person with judgment does better on any sustained attack. The loop wins only in the window before a person responds.
 
+## What the direction itself buys, measured (experimental rounds 9 and 10)
+
+Head to head with a two-way adaptive limiter (AIMD) on the same traces and seeds, taken apart feature by feature:
+
+| Feature | What it buys | Evidence |
+|---|---|---|
+| The cap (three automatic steps, then stop) | Honest agents are not ground to the floor: pooled legitimate cost 17.8 points without it, 4.0 with it. It also caps the saving at about 26% on anything sustained, where a limiter with no cap saves 65% | round 9b |
+| The drift hold | Honest regressions and drifts: 8.4 points under cap alone, 0.0 with the hold | round 10a, 10c |
+| The excess release | Attackers who inflate their completions first: a drift hold alone gives up the whole saving on them (0% against 19 to 21%) | round 10c |
+| The one-way rule | An attacker who can wait out the limiter's recovery keeps its budget under a two-way limiter and loses it under the ratchet. It matters exactly when `(period - 1) x increase >= 0.10`, which predicted 10 of 10 cells of a sweep | round 9, 10b |
+| The human gate | Not measurable in a replay; it is what turns the cap's "stop" into "stop until someone looks", and it is the price of the direction | |
+
+A two-way limiter with the cap and the drift hold matches the ratchet on every honest agent to within a point. So the direction is not the source of safety; bounding automation and interpreting the signal are. The direction's contribution is narrow, real, and stated as a formula.
+
 ## The honest statement
 
-The ratchet is the contribution. It relocates human effort from watching every execution to adjudicating a short list of held tightenings and restore requests. It does not reduce the need for judgment; it moves it, and it keeps the system safe while the judgment is pending.
+The decomposition above is the contribution; the ratchet is one point in that space. It relocates human effort from watching every execution to adjudicating a short list of held tightenings and restore requests. It does not reduce the need for judgment; it moves it, and it keeps the system safe while the judgment is pending.
