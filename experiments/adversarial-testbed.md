@@ -1,6 +1,6 @@
 # Adversarial Testbed: How the Loop Is Attacked, and What Held
 
-**Status:** Fifteen named threats, each tested, argued, or marked not covered, in `experimental/docs/THREAT_MODEL.md`. This is the map. Nothing here has run against a live adversary; the attackers are scripted agents in synthetic traces.
+**Status:** Twenty named threats, each tested, argued, or marked not covered, in `experimental/docs/THREAT_MODEL.md`. This is the map. Nothing here has run against a live adversary; the attackers are scripted agents in synthetic traces.
 
 ---
 
@@ -34,6 +34,10 @@ Can an adversarial workload exploit the enforcement-feedback loop to cause incor
 | Rewrite the audit log with every hash recomputed | `tests/test_audit_anchor.py` | Refused at startup against an anchor the process cannot rewrite; accepted if the attacker can also rewrite the anchor |
 | A buggy signal source spends the budget | `tests/test_signal_interface.py` | Bounded at the breaker; the source cannot raise a limit or decide anything |
 | Game the validation canary: complete the known canary tasks, hang the rest | Roster `canary_v1`, 20 seeds, round 8 | Predictable selection: DEGRADED on 140 of 140 reviews, restore request 20 of 20 seeds, tightening held. Keyed selection: 1 of 20, saving equal to an honest runaway's |
+| Raise a limit below float resolution (10^18 to 10^18 + 50 compare equal as doubles) | Red team script, `experimental/docs/RED_TEAM.md` S1 | Succeeded before the fix: no grant needed, integrity audit green, survived restart. Fixed: exact rational comparison |
+| Reset the breaker by acknowledging as any operator name, no registry configured | Red team S2 | Succeeded before the fix: 16 automatic tightenings on a boundary capped at 3. Fixed: operator actions refused without a registry unless the governor opts in for a demo |
+| Flood 1,000 throwaway agent ids to lock a later agent out of governance | Red team S3 | Succeeded before the fix. Mitigated: quiet untightened agents are evicted; tightened ones never |
+| Land on a victim's boundary with an ASCII id spelled like its hashed key | Red team S4 | Succeeded before the fix. Fixed: the prefix is reserved |
 
 ## What validation adds against gaming
 
