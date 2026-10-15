@@ -105,6 +105,8 @@ The three questions have been worked in the `experimental` repository (github.co
 
 **The claim, as revised.** The strong claim, that the system judges on its own when a limit should come down, was tested and did not hold. The project now claims bounded autonomy with human-gated loosening and validated tightening: human effort relocated to adjudication, not removed. Nothing has run on real traffic.
 
+**What comes next.** `docs/program-priced-accountable-limiting.md` (2026-10-15) re-aims the thesis at what the data supports: a limiter that prices every tightening in time, owes an outcome on each one, reports which program classes it harms, and is scored on a public benchmark built from the cases that broke the first design. It names the capabilities reused from this portfolio (outcome obligations, the disparate-impact screen, the SWIZZLE and ASSAY harness mechanisms, URE's recovery rules), the open problem at its center (tightening censors its own evidence), and the pre-registered predictions each phase must meet.
+
 ## Known Issues
 
 1. **Overclaiming:** Initial white paper claims the system "solves" execution governance. It doesn't. The experimental work has since tested the strong claim and it did not hold; see "Evidence so far".
