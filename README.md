@@ -3,7 +3,7 @@
 **Status:** Experimental Research Proposal  
 **Author:** William N. King  
 **Collaborators:** Claude Fable 5.1, Claude Haiku 4.5  
-**Last Updated:** October 2, 2026
+**Last Updated:** October 14, 2026
 
 ---
 
@@ -92,19 +92,31 @@ If it doesn't, the research clarifies where and why.
 
 ---
 
+## Evidence so far (October 14, 2026)
+
+The three questions have been worked in the `experimental` repository (github.com/wking53214/experimental; PR #5 until merged), with pre-registered criteria and predictions written before each run. Where things stand:
+
+- **A. Detection.** Statistical detection on real telemetry cries wolf: false alarms spend the tightening budget before real trouble arrives (criteria 3 and 4 fail). Enforcement events as the signal work for runaways and bounded attackers, but no trap-count rule separates a legitimately wide-tailed agent from a mild runaway. See `docs/interpretation-layer-design.md`.
+- **B. Adaptation.** The one-way ratchet holds under fuzzing, soak runs, twelve rounds of trace replays and a six-reviewer red team (two real enforcement fixes came out of it): automation never loosened a limit, every change is attributable, limits survive restarts and outside signals. The tightening budget caps both the damage an attacker can do through it (about 27% of a limit) and the benefit it buys (the same 27%). Taken apart against a two-way limiter, the cap and the interpretation rules do all the measured protecting; the one-way direction's measured benefit was a cold-start artefact and that claim is withdrawn. See `docs/asymmetric-authority-safety.md`, `experiments/adversarial-testbed.md`, `experimental/docs/RED_TEAM.md`.
+- **C. Validation.** Built as a canary A/B comparison in time currency with confidence bounds. It confirms gross harm within a few slices, marginal harm late, and benefit almost never at a 10% canary; it is blind to intent. Criterion 10 fails on confirmation speed and passes everything else. See `experiments/validation-framework.md`.
+
+**The claim, as revised.** The strong claim, that the system judges on its own when a limit should come down, was tested and did not hold. The project now claims bounded autonomy with human-gated loosening and validated tightening: human effort relocated to adjudication, not removed. Nothing has run on real traffic.
+
+**What comes next.** `docs/program-priced-accountable-limiting.md` (2026-10-15) re-aims the thesis at what the data supports: a limiter that prices every tightening in time, owes an outcome on each one, reports which program classes it harms, and is scored on a public benchmark built from the cases that broke the first design. It names the capabilities reused from this portfolio (outcome obligations, the disparate-impact screen, the SWIZZLE and ASSAY harness mechanisms, URE's recovery rules), the open problem at its center (tightening censors its own evidence), and the pre-registered predictions each phase must meet. Its section 8 is a documented novelty check against the re-aimed thesis: each pillar has adjacent prior art, three have close 2026 precedents, and no found work combines them or measures the self-censoring loop.
+
 ## Known Issues
 
-1. **Overclaiming:** Initial white paper claims the system "solves" execution governance. It doesn't. It's a proposal.
+1. **Overclaiming:** Initial white paper claims the system "solves" execution governance. It doesn't. The experimental work has since tested the strong claim and it did not hold; see "Evidence so far".
 
-2. **Missing interpretation layer:** Current design jumps from "violation happened" → "tighten boundary." Needs an intermediate layer asking "what does this violation mean?"
+2. **Interpretation layer:** built as a set of rules (expected load, rate, drift, excess release) that answer the cheapest version of "what does this violation mean?" and are documented with what they cannot separate (`docs/interpretation-layer-design.md`).
 
-3. **Unproven validation:** No mechanism established for validating that boundary tightening actually improves security (vs. just reducing violation counts).
+3. **Validation:** a canary-based mechanism now exists and is measured; it confirms harm, not benefit, at the tested canary volume (`experiments/validation-framework.md`).
 
 4. **Constraint accumulation:** Asymmetric authority prevents autonomous loosening, which means constraints accumulate forever unless humans periodically adjudicate them. This is a feature (safety), but it's not "without human oversight."
 
 5. **Technical debt:** 
-   - Materialization checkpoint logic (MAX timestamp) is unsafe
-   - "effectiveness_score" undefined
+   - Materialization checkpoint logic (MAX timestamp) is unsafe; fix in `implementation/materialization-correctness.md`
+   - "effectiveness_score" now defined for deadline boundaries only, as a bounded verdict rather than a float (`docs/relational-schema.md`)
    - Pseudocode has bugs
 
 ---
