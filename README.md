@@ -7,6 +7,16 @@
 
 ---
 
+## Role Within ≡TACK
+
+- **What it is.** A research and writing repository: a proposal, critique and design notes for enforcement telemetry and asymmetric adaptive authority (autonomous tightening, human-gated loosening). Documents only, with no code and no tests here.
+- **Authority matrix.** None. It enforces, evaluates and records nothing. The prototype that tests the idea is the separate `experimental` repository, and its `docs/THEORY_ALIGNMENT.md` maps each claim here to what that code does.
+- **Does not own.** The prototype, the STACK kernel's P3.2 implementation, or any measured result (those live in `experimental`).
+- **Depends on / depended on by.** Nothing at runtime. Cross-references to files in `experimental` were checked on 2026-11-15 and exist (`docs/THEORY_ALIGNMENT.md`, `docs/LIMITATIONS.md`, `docs/RED_TEAM.md`).
+- **Verified versus declared.** All claims here are declared. Measured evidence is in `experimental` and was not re-run for this README beyond that repository's own test run (see its README).
+
+Not run: no tests exist here.
+
 ## Overview
 
 This repository contains research on a governance architecture for untrusted code execution based on three core ideas:
@@ -53,9 +63,22 @@ p3-2-governance-research/
 ├── ARCHITECTURE.md                        (architectural overview and known gaps)
 ├── COMMENTARY.md                          (synthesis commentary)
 ├── PUSH_TO_GITHUB.md                      (setup notes for publishing this repo)
-└── docs/
-    └── white-paper-v1.md                  (full technical proposal; sec. 3 flywheel, sec. 4 red-team, sec. 5 policy layer)
+├── docs/
+│   ├── white-paper-v1.md                  (full technical proposal; sec. 3 flywheel, sec. 4 red-team, sec. 5 policy layer)
+│   ├── asymmetric-authority-safety.md
+│   ├── interpretation-layer-design.md
+│   ├── program-priced-accountable-limiting.md
+│   ├── relational-schema.md
+│   └── HANDOFF-2026-10-15.md
+├── experiments/
+│   ├── adversarial-testbed.md
+│   └── validation-framework.md
+└── implementation/
+    ├── materialization-correctness.md
+    └── technology-choices.md
 ```
+
+The five files and two folders below `docs/` that the tree above did not previously list were added 2026-11-15 from the directory listing; their contents were not re-reviewed for this README.
 
 The prototype that tests the asymmetric-authority rule lives in a separate repository,
 `wking53214/experimental`. Its `docs/THEORY_ALIGNMENT.md` maps each claim here to what the
@@ -70,7 +93,7 @@ code implements, partially implements, or leaves out.
 2. CRITIQUE.md (honest assessment of overclaiming and gaps)
 
 **Then:**
-3. ARCHITECTURE.md (what the system actually does)
+3. ARCHITECTURE.md (the proposed design, as written on 2026-10-01 and not edited since. It describes no running system, and it still lists the interpretation layer and the validation layer as missing; the prototype has since built both in a limited form, see Known Issues 2 and 3 below)
 4. docs/white-paper-v1.md, sec. 5 "Policy Layer" (the asymmetric-authority rules and approval gates)
 5. docs/white-paper-v1.md, sec. 4 "Red-Team Analysis" (failure modes and mitigations)
 
@@ -92,9 +115,9 @@ If it doesn't, the research clarifies where and why.
 
 ---
 
-## Evidence so far (October 14, 2026)
+## Evidence so far (October 14, 2026; not updated since, and the `experimental` repository has changed since then)
 
-The three questions have been worked in the `experimental` repository (github.com/wking53214/experimental; PR #5 until merged), with pre-registered criteria and predictions written before each run. Where things stand:
+The three questions have been worked in the `experimental` repository (github.com/wking53214/experimental; PR #5, merged to its `main` on 2026-10-14), with criteria and predictions written down for each round. How far git can show they were written first (corrected 2026-11-18): the first six scorecard criteria were committed before they were scored, and rounds 12, 13 and 14 each committed their predictions before the run was launched. For rounds 4 to 11 and for criterion 10, `experimental`'s own red-team record (`docs/RED_TEAM.md` there, finding P1) says the order cannot be shown from git: predictions, code and results share a commit, or the run had started before the predictions were committed. Where things stand:
 
 - **A. Detection.** Statistical detection on real telemetry cries wolf: false alarms spend the tightening budget before real trouble arrives (criteria 3 and 4 fail). Enforcement events as the signal work for runaways and bounded attackers, but no trap-count rule separates a legitimately wide-tailed agent from a mild runaway. See `docs/interpretation-layer-design.md`.
 - **B. Adaptation.** The one-way ratchet holds under fuzzing, soak runs, twelve rounds of trace replays and a six-reviewer red team (two real enforcement fixes came out of it): automation never loosened a limit, every change is attributable, limits survive restarts and outside signals. The tightening budget caps both the damage an attacker can do through it (about 27% of a limit) and the benefit it buys (the same 27%). Taken apart against a two-way limiter, the cap and the interpretation rules do all the measured protecting; the one-way direction's measured benefit was a cold-start artefact and that claim is withdrawn. See `docs/asymmetric-authority-safety.md`, `experiments/adversarial-testbed.md`, `experimental/docs/RED_TEAM.md`.
